@@ -2,36 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --cl-dark:        #141413;
-  --cl-light:       #faf9f5;
-  --cl-mid-gray:    #b0aea5;
-  --cl-light-gray:  #e8e6dc;
-  --cl-orange:      #d97757;
-  --cl-orange-soft: #f5e9e4;
-  --cl-blue:        #6a9bcc;
-  --cl-blue-soft:   #e8f0f7;
-  --cl-green:       #788c5d;
-  --cl-green-soft:  #eaf0e2;
-  --space-1: 4px;  --space-2: 8px;  --space-3: 12px;
-  --space-4: 16px; --space-5: 20px; --space-6: 24px;
-  --space-8: 32px; --space-10: 40px; --space-12: 48px;
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 20px;
-  --radius-pill: 999px;
+@layer base {
+  * { 
+    font-family: var(--font-almarai), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif; 
+  }
+  body {
+    @apply bg-black text-primary selection:bg-primary/30 overflow-x-hidden;
+  }
 }
 
-body {
-  background-color: var(--cl-light);
-  color: var(--cl-dark);
+.noise-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
-h1 { @apply font-display text-[32px] font-semibold text-cl-dark; }
-h2 { @apply font-display text-[24px] font-semibold text-cl-dark; }
-h3 { @apply font-display text-[18px] font-medium text-cl-dark; }
-h4 { @apply font-display text-[15px] font-medium text-cl-dark; }
-p { @apply font-body text-[15px] font-normal text-cl-dark leading-[1.7]; }
-caption { @apply font-body text-[13px] text-cl-mid-gray; }
-label { @apply font-display text-[11px] font-medium tracking-[0.06em] uppercase text-cl-mid-gray; }
+.bg-noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter2)'/%3E%3C/svg%3E");
+}
