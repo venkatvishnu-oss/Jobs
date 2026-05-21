@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Job {
+  id                 String    @id @default(cuid())
+  jobHash            String    @unique
+  title              String
+  companyName        String
+  companyLogoUrl     String?
+  location           String
+  isRemote           Boolean   @default(false)
+  salaryMin          Int
+  salaryMax          Int
+  salaryCurrency     String    @default("INR")
+  salaryPeriod       String    @default("monthly")
+  experienceLevel    String
+  jobType            String
+  domain             String
+  description        String    @db.Text
+  applyUrl           String
+  sourceWebsite      String
+  postedAt           DateTime
+  scrapedAt          DateTime  @default(now())
+  verificationStatus String    @default("pending")
+  companyRating      Float?
+  companyReviews     Int?
+  companyWebsite     String?
+  companyAge         Int?
+  fraudFlags         String[]
+  isActive           Boolean   @default(true)
+  notifiedAt         DateTime?
+  viewCount          Int       @default(0)
+  clickCount         Int       @default(0)
+}
+
+model ScrapeLog {
+  id           String   @id @default(cuid())
+  runAt        DateTime @default(now())
+  source       String
+  totalFound   Int
+  afterFilters Int
+  verified     Int
+  rejected     Int
+  posted       Int
+  errorMsg     String?
+}
+
+model RejectedJob {
+  id         String   @id @default(cuid())
+  title      String
+  company    String
+  source     String
+  reason     String
+  rawData    Json
+  rejectedAt DateTime @default(now())
+}

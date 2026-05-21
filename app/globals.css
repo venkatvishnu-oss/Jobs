@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --cl-dark:        #141413;
+  --cl-light:       #faf9f5;
+  --cl-mid-gray:    #b0aea5;
+  --cl-light-gray:  #e8e6dc;
+  --cl-orange:      #d97757;
+  --cl-orange-soft: #f5e9e4;
+  --cl-blue:        #6a9bcc;
+  --cl-blue-soft:   #e8f0f7;
+  --cl-green:       #788c5d;
+  --cl-green-soft:  #eaf0e2;
+  --space-1: 4px;  --space-2: 8px;  --space-3: 12px;
+  --space-4: 16px; --space-5: 20px; --space-6: 24px;
+  --space-8: 32px; --space-10: 40px; --space-12: 48px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-pill: 999px;
+}
+
+body {
+  background-color: var(--cl-light);
+  color: var(--cl-dark);
+}
+
+h1 { @apply font-display text-[32px] font-semibold text-cl-dark; }
+h2 { @apply font-display text-[24px] font-semibold text-cl-dark; }
+h3 { @apply font-display text-[18px] font-medium text-cl-dark; }
+h4 { @apply font-display text-[15px] font-medium text-cl-dark; }
+p { @apply font-body text-[15px] font-normal text-cl-dark leading-[1.7]; }
+caption { @apply font-body text-[13px] text-cl-mid-gray; }
+label { @apply font-display text-[11px] font-medium tracking-[0.06em] uppercase text-cl-mid-gray; }

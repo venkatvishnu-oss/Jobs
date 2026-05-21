@@ -1,0 +1,16 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron?secret=YOUR_CRON_SECRET",
+      "schedule": "*/5 * * * *"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" }
+      ]
+    }
+  ]
+}
