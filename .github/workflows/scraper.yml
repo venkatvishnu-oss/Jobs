@@ -1,0 +1,32 @@
+name: Automated Job Scraper Engine
+
+on:
+  schedule:
+    # This tells GitHub to run this computer automatically every 30 minutes!
+    - cron: '*/30 * * * *'
+  workflow_dispatch: # This allows you to click a button to run it manually anytime!
+
+jobs:
+  scrape-and-save:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out your repository code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Project Dependencies
+        run: npm install
+
+      - name: Generate Database Client
+        run: npx prisma generate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Run Scraper Robot
+        run: node scripts/scrape.js
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
