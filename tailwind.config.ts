@@ -1,8 +1,9 @@
-/** @type {import('tailwindcss').Config} */
-export default {
+import type { Config } from "tailwindcss";
+
+const config: Config = {
   content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
@@ -10,9 +11,12 @@ export default {
         primary: '#DEDBC8',
       },
       fontFamily: {
-        serif: ['"Instrument Serif"', 'serif'],
+        sans: ['var(--font-almarai)', 'sans-serif'],
+        serif: ['var(--font-instrument)', 'serif'],
       },
     },
   },
   plugins: [],
-}
+};
+
+export default config;
