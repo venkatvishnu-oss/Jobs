@@ -1,53 +1,39 @@
 const { PrismaClient } = require('@prisma/client');
 const axios = require('axios');
-const cheerio = require('cheerio');
 const md5 = require('md5');
 
 const prisma = new PrismaClient();
 
-// A pool of user agents to trick websites into thinking we are a real human browsing
-const USER_AGENTS = [
-  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0 Safari/537.36',
-  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Chrome/121.0.0.0 Safari/537.36'
-];
-
-async function scrapeNaukri() {
-  console.log('🤖 Accessing Naukri...');
-  const url = 'https://www.naukri.com/it-jobs';
-  const randomUA = USER_AGENTS[Math.floor(Math.random() * USER_AGENTS.length)];
+async function scrapeJobs() {
+  console.log('🤖 Fetching real jobs from open API...');
   
   try {
-    const { data } = await axios.get(url, { headers: { 'User-Agent': randomUA } });
-    const $ = cheerio.load(data);
+    // This is an open backdoor that NEVER blocks robots!
+    const { data } = await axios.get('https://remotive.com/api/remote-jobs?category=software-dev&limit=20');
     const jobs = [];
 
-    $('.srp-jobtuple-wrapper').each((_, el) => {
-      const title = $(el).find('.title').text().trim();
-      const companyName = $(el).find('.comp-name').text().trim();
-      const location = $(el).find('.locWdth').text().trim();
-      const applyUrl = $(el).find('.title').attr('href') || '';
-      const description = $(el).find('.job-desc').text().trim();
-
-      if (title && companyName) {
-        jobs.push({
-          title,
-          companyName,
-          location: location || 'India / Remote',
-          salaryMin: 60000,
-          salaryMax: 95000,
-          experienceLevel: '0-1 years',
-          jobType: 'Full-time',
-          domain: 'AI / Tech',
-          description: description || 'No description provided by source.',
-          applyUrl,
-          sourceWebsite: 'Naukri',
-          postedAt: new Date()
-        });
-      }
+    // The data comes back instantly as clean computer text (JSON)
+    data.jobs.forEach(job => {
+      jobs.push({
+        title: job.title,
+        companyName: job.company_name,
+        location: job.candidate_required_location || 'Remote',
+        salaryMin: 50000,
+        salaryMax: 90000,
+        experienceLevel: 'Any',
+        jobType: job.job_type ? job.job_type.replace('_', ' ') : 'Full-time',
+        domain: 'Software / Tech',
+        // Strip out the ugly HTML tags to make it clean
+        description: job.description.replace(/<[^>]*>?/gm, '').substring(0, 200) + '...',
+        applyUrl: job.url,
+        sourceWebsite: 'Remotive',
+        postedAt: new Date(job.publication_date || new Date())
+      });
     });
+    
     return jobs;
   } catch (err) {
-    console.error('❌ Failed to scrape Naukri:', err.message);
+    console.error('❌ Failed to fetch jobs:', err.message);
     return [];
   }
 }
@@ -55,29 +41,24 @@ async function scrapeNaukri() {
 async function runEngine() {
   console.log('🚀 Launching Scraping Engine...');
   
-  // 1. Gather all raw scraped jobs
-  const rawJobs = await scrapeNaukri();
-  console.log(`📊 Found ${rawJobs.length} raw jobs from sources.`);
+  const rawJobs = await scrapeJobs();
+  console.log(`📊 Found ${rawJobs.length} raw jobs from API.`);
 
   let addedCount = 0;
   let duplicateCount = 0;
 
-  // 2. Process each job through the pipeline
   for (const job of rawJobs) {
-    // Generate an absolute bulletproof unique hash based on Title, Company, and Location
     const jobHash = md5(`${job.title}-${job.companyName}-${job.location}`.toLowerCase().trim());
 
-    // Check if it already exists in Neon database
     const existingJob = await prisma.job.findUnique({
       where: { jobHash }
     });
 
     if (existingJob) {
       duplicateCount++;
-      continue; // Skip it! We don't want duplicates
+      continue;
     }
 
-    // Save brand new job to database
     await prisma.job.create({
       data: {
         ...job,
@@ -88,7 +69,6 @@ async function runEngine() {
     addedCount++;
   }
 
-  // 3. Log results to the console
   console.log(`✅ Pipeline complete. Added: ${addedCount} jobs. Filtered Duplicates: ${duplicateCount}.`);
 }
 
