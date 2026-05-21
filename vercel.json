@@ -1,10 +1,4 @@
 {
-  "crons": [
-    {
-      "path": "/api/cron?secret=YOUR_CRON_SECRET",
-      "schedule": "0 0 * * *"
-    }
-  ],
   "headers": [
     {
       "source": "/api/(.*)",
