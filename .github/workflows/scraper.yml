@@ -2,9 +2,12 @@ name: Automated Job Scraper Engine
 
 on:
   schedule:
-    # This tells GitHub to run this computer automatically every 30 minutes!
     - cron: '*/30 * * * *'
-  workflow_dispatch: # This allows you to click a button to run it manually anytime!
+  workflow_dispatch:
+
+env:
+  # This makes the yellow warning go away completely!
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true 
 
 jobs:
   scrape-and-save:
@@ -16,7 +19,7 @@ jobs:
       - name: Set up Node.js environment
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24' # Upgraded to version 24!
 
       - name: Install Project Dependencies
         run: npm install
